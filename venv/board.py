@@ -1,7 +1,6 @@
 import random
 import numpy as np
 
-
 class Board:
     def __init__(self, n):
         self.n_queen = n
