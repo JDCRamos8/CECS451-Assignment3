@@ -1,63 +1,115 @@
 from board import *
 import copy
+import time
 
-curr_state = Board(5)      # 5x5 Chess Board
-curr_state.fitness()
-curr_state.show()
-
-map = curr_state.get_map()
 
 def hill_climbing():
-    return 0
+    curr_state = Board(5)  # 5x5 chess board
+    curr_state.fitness()
+    curr_state.show()
 
-def get_adjacents():
-    return 0
+    heuristic_cost = curr_state.get_fit()
 
-next_queen = curr_state.coord.pop()
-print("Next queen: " + str(next_queen))
+    restart_condition = 0               # If result heuristic gets stuck 10 times, restart
+    restarts = 0
 
-# Get all coordinates in a row whose cell is 0 in the chosen queen's row
-adjacents = []
+    while heuristic_cost > 0:           # Continue while heuristic cost is not 0
+        if restart_condition == 10:
+            curr_state = Board(5)       # Create new random 5x5 chess board
+            curr_state.fitness()
+            restarts += 1
 
-for i in range(5):
-    row = []
-    if (curr_state.get_map()[next_queen[0]][i] == 0):
-        row.append((next_queen[0] , i))
-    adjacents.append(row)
+        print("RESTART COUNTER: " + str(restart_condition))
+        next_queen = curr_state.coord.pop()
+        print("Next queen: " + str(next_queen) + "\n")
 
-print()
-states = [(curr_state.get_map(), curr_state.get_fit())]
-print(states)
-print()
+        adjacents = get_adjacents(curr_state, next_queen)
 
-curr_state.flip(next_queen[0], next_queen[1])       # Flip previous queen to 0
+        print("INITIAL STATE")
+        states = [(curr_state.get_map(), curr_state.get_fit())]     # Record initial state & fitness
+        print(states)
 
-print("CURRENT STATE AFTER FLIP")
-curr_state.show()
+        cand_state = copy.deepcopy(curr_state)
+        cand_state.flip(next_queen[0], next_queen[1])               # Flip previous queen to 0
 
-cand_state = copy.deepcopy(curr_state)
-
-print()
-print("Adjacents: " + str(adjacents))
-print()
-
-for row in adjacents:
-    state_number = 1
-    for cell in row:
-        next_state = copy.deepcopy(cand_state)
-        next_state.flip(cell[0], cell[1])
-
-        print("State " + str(state_number))
-        next_state.fitness()
-        next_state.show()
+        print()
+        print("Adjacents: " + str(adjacents))
         print()
 
-        # Record board & fitness
-        states.append((next_state.get_map(), next_state.get_fit()))
+        state_number = 1
+        for row in adjacents:
+            for cell in row:
+                next_state = copy.deepcopy(cand_state)
+                next_state.flip(cell[0], cell[1])
 
-        state_number += 1
+                print("State " + str(state_number))
+                next_state.fitness()
+                next_state.show()
+                print()
 
-states.sort(key = lambda fitness: fitness[1], reverse = True)
+                states.append((next_state.get_map(), next_state.get_fit()))     # Record board & fitness
 
-for map, fitness in states:
-    print(map, fitness)
+                state_number += 1
+        state_number = 1
+
+        states.sort(key=lambda fitness: fitness[1], reverse=True)       # Sort candidate states by fitness
+
+        lowest_state = states.pop()
+
+        print("CANDIDATE STATES")
+        for map, fitness in states:
+            print(map, fitness)
+        print(lowest_state)
+
+        print("\nLOWEST STATE: " + str(lowest_state))
+
+        if curr_state.get_fit() == lowest_state[1]:
+            restart_condition += 1
+
+        heuristic_cost = lowest_state[1]        # Choose lowest heuristic cost of all candidates states
+        curr_state.map = lowest_state[0]        # Assign lowest heuristic cost's map to current state
+        curr_state.fitness()
+        curr_state.show()
+
+    return (curr_state, restarts)
+
+
+def print_map(map):
+    new_map = []
+
+    for i in range(len(map)):
+        row = []
+        for j in range(len(map)):
+            if map[i][j] == 1:
+                row.append(str(map[i][j]))
+            else:
+                row.append('-')
+        new_map.append(row)
+
+    for row in new_map:
+        print(' '.join(row))
+
+
+# Given a current state and the (x, y) of next queen,
+# Gets all coordinates in a row whose cell is 0 in the chosen queen's row
+def get_adjacents(curr_state, next_queen):
+    adjacents = []
+
+    for i in range(5):
+        row = []
+        if (curr_state.get_map()[next_queen[0]][i] == 0):
+            row.append((next_queen[0], i))
+        else:
+            continue
+        adjacents.append(row)
+    return adjacents
+
+def main():
+    start_time = int(round(time.time() * 1000))
+    result = hill_climbing()
+    end_time = int(round(time.time() * 1000))
+    print("\nRunning time: " + str(end_time - start_time) + "ms")
+    print("# of restart: " + str(result[1]))
+    print_map(result[0].map)
+
+main()
