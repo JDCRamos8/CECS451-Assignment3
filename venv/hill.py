@@ -13,10 +13,12 @@ def hill_climbing():
     restart_condition = 0               # If result heuristic gets stuck 10 times, restart
     restarts = 0
 
-    while heuristic_cost > 0:           # Continue while heuristic cost is not 0
+    while heuristic_cost != 0:           # Continue while heuristic cost is not 0
         if restart_condition == 10:
+            print("RESETTING BOARD...")
             curr_state = Board(5)       # Create new random 5x5 chess board
             curr_state.fitness()
+            curr_state.show()
             restarts += 1
 
         next_queen = curr_state.coord.pop()
@@ -50,17 +52,17 @@ def hill_climbing():
 
         states.sort(key=lambda fitness: fitness[1], reverse=True)       # Sort candidate states by fitness
 
-        lowest_state = states.pop()
-
         print("CANDIDATE STATES")
         for map, fitness in states:
             print(map, fitness)
-        print(lowest_state)
 
-        print("\nLOWEST STATE: " + str(lowest_state))
+        lowest_state = states.pop()
+
+        print("\nCURRENT STATE")
 
         if curr_state.get_fit() == lowest_state[1]:
             restart_condition += 1
+        print("Restarts: " + str(restart_condition))
 
         heuristic_cost = lowest_state[1]        # Choose lowest heuristic cost of all candidates states
         curr_state.map = lowest_state[0]        # Assign lowest heuristic cost's map to current state
@@ -70,6 +72,7 @@ def hill_climbing():
     return (curr_state, restarts)
 
 
+# Prints chess board where queens are "1" and everything else is "-"
 def print_map(map):
     new_map = []
 
@@ -79,11 +82,11 @@ def print_map(map):
             if map[i][j] == 1:
                 row.append(str(map[i][j]))
             else:
-                row.append('-')
+                row.append("-")
         new_map.append(row)
 
     for row in new_map:
-        print(' '.join(row))
+        print(" ".join(row))
 
 
 # Given a current state and the (x, y) of next queen,
