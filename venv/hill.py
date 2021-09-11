@@ -19,20 +19,16 @@ def hill_climbing():
             curr_state.fitness()
             restarts += 1
 
-        print("RESTART COUNTER: " + str(restart_condition))
         next_queen = curr_state.coord.pop()
         print("Next queen: " + str(next_queen) + "\n")
 
         adjacents = get_adjacents(curr_state, next_queen)
 
-        print("INITIAL STATE")
         states = [(curr_state.get_map(), curr_state.get_fit())]     # Record initial state & fitness
-        print(states)
 
         cand_state = copy.deepcopy(curr_state)
         cand_state.flip(next_queen[0], next_queen[1])               # Flip previous queen to 0
 
-        print()
         print("Adjacents: " + str(adjacents))
         print()
 
