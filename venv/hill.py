@@ -20,7 +20,7 @@ def hill_climbing():
             restarts += 1
             restart_condition = 0
 
-        next_queen = curr_state.coord.pop()
+        next_queen = curr_state.coord.pop()     # Get coordinates of a random attacking queen
 
         adjacents = get_adjacents(curr_state, next_queen)
 
@@ -84,10 +84,13 @@ def get_adjacents(curr_state, next_queen):
     return adjacents
 
 def main():
-    start_time = int((time.time() * 1000))
+    start_time = time.time() * 1000
     result = hill_climbing()
-    end_time = int((time.time() * 1000))
-    print("Running time: " + str(end_time - start_time) + "ms")
+    end_time = time.time() * 1000
+
+    elapsed_time = round(end_time - start_time)
+
+    print("Running time: " + str(elapsed_time) + "ms")
     print("# of restart: " + str(result[1]))
     print_map(result[0].map)
 
