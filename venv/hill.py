@@ -6,7 +6,6 @@ import time
 def hill_climbing():
     curr_state = Board(5)  # 5x5 chess board
     curr_state.fitness()
-    curr_state.show()
 
     heuristic_cost = curr_state.get_fit()
 
@@ -15,14 +14,13 @@ def hill_climbing():
 
     while heuristic_cost != 0:           # Continue while heuristic cost is not 0
         if restart_condition == 10:
-            print("RESETTING BOARD...")
             curr_state = Board(5)       # Create new random 5x5 chess board
             curr_state.fitness()
-            curr_state.show()
+
             restarts += 1
+            restart_condition = 0
 
         next_queen = curr_state.coord.pop()
-        print("Next queen: " + str(next_queen) + "\n")
 
         adjacents = get_adjacents(curr_state, next_queen)
 
@@ -31,43 +29,25 @@ def hill_climbing():
         cand_state = copy.deepcopy(curr_state)
         cand_state.flip(next_queen[0], next_queen[1])               # Flip previous queen to 0
 
-        print("Adjacents: " + str(adjacents))
-        print()
-
-        state_number = 1
-        for row in adjacents:
+        for row in adjacents:       # Generate a new state for each adjacent cell in row
             for cell in row:
                 next_state = copy.deepcopy(cand_state)
                 next_state.flip(cell[0], cell[1])
 
-                print("State " + str(state_number))
                 next_state.fitness()
-                next_state.show()
-                print()
 
                 states.append((next_state.get_map(), next_state.get_fit()))     # Record board & fitness
 
-                state_number += 1
-        state_number = 1
-
         states.sort(key=lambda fitness: fitness[1], reverse=True)       # Sort candidate states by fitness
-
-        print("CANDIDATE STATES")
-        for map, fitness in states:
-            print(map, fitness)
 
         lowest_state = states.pop()
 
-        print("\nCURRENT STATE")
-
-        if curr_state.get_fit() == lowest_state[1]:
+        if curr_state.get_fit() == lowest_state[1]:     # Prevents stuck at local minima
             restart_condition += 1
-        print("Restarts: " + str(restart_condition))
 
         heuristic_cost = lowest_state[1]        # Choose lowest heuristic cost of all candidates states
         curr_state.map = lowest_state[0]        # Assign lowest heuristic cost's map to current state
         curr_state.fitness()
-        curr_state.show()
 
     return (curr_state, restarts)
 
@@ -104,10 +84,10 @@ def get_adjacents(curr_state, next_queen):
     return adjacents
 
 def main():
-    start_time = int(round(time.time() * 1000))
+    start_time = int((time.time() * 1000))
     result = hill_climbing()
-    end_time = int(round(time.time() * 1000))
-    print("\nRunning time: " + str(end_time - start_time) + "ms")
+    end_time = int((time.time() * 1000))
+    print("Running time: " + str(end_time - start_time) + "ms")
     print("# of restart: " + str(result[1]))
     print_map(result[0].map)
 
