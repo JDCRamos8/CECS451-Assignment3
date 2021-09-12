@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import time
 
 class Board:
     def __init__(self, n):
@@ -47,7 +48,23 @@ class Board:
 
     def get_pairs(self):
         return self.coord
-            
+
+    # Prints chess board where queens are "1" and everything else is "-"
+    def print_map(self):
+        new_map = []
+
+        for i in range(len(self.map)):
+            row = []
+            for j in range(len(self.map)):
+                if self.map[i][j] == 1:
+                    row.append(str(self.map[i][j]))
+                else:
+                    row.append("-")
+            new_map.append(row)
+
+        for row in new_map:
+            print(" ".join(row))
+
 if __name__ == '__main__':
     test = Board(5)
     test.fitness()

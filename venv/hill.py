@@ -1,6 +1,20 @@
 from board import *
 import copy
-import time
+
+
+# Given a current state and the (x, y) of next queen,
+# Gets all coordinates in a row whose cell is 0 in the chosen queen's row
+def get_adjacents(curr_state, next_queen):
+    adjacents = []
+
+    for i in range(5):
+        row = []
+        if (curr_state.get_map()[next_queen[0]][i] == 0):
+            row.append((next_queen[0], i))
+        else:
+            continue
+        adjacents.append(row)
+    return adjacents
 
 
 def hill_climbing():
@@ -52,37 +66,6 @@ def hill_climbing():
     return (curr_state, restarts)
 
 
-# Prints chess board where queens are "1" and everything else is "-"
-def print_map(map):
-    new_map = []
-
-    for i in range(len(map)):
-        row = []
-        for j in range(len(map)):
-            if map[i][j] == 1:
-                row.append(str(map[i][j]))
-            else:
-                row.append("-")
-        new_map.append(row)
-
-    for row in new_map:
-        print(" ".join(row))
-
-
-# Given a current state and the (x, y) of next queen,
-# Gets all coordinates in a row whose cell is 0 in the chosen queen's row
-def get_adjacents(curr_state, next_queen):
-    adjacents = []
-
-    for i in range(5):
-        row = []
-        if (curr_state.get_map()[next_queen[0]][i] == 0):
-            row.append((next_queen[0], i))
-        else:
-            continue
-        adjacents.append(row)
-    return adjacents
-
 def main():
     start_time = time.time() * 1000
     result = hill_climbing()
@@ -92,6 +75,6 @@ def main():
 
     print("Running time: " + str(elapsed_time) + "ms")
     print("# of restart: " + str(result[1]))
-    print_map(result[0].map)
+    result[0].print_map()
 
 main()
