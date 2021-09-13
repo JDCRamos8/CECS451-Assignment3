@@ -36,7 +36,6 @@ for i in range(8):
 
 # Print state, encode state, and calculate fitness(h)
 state_number = 1
-total = 0
 for state in states:
     print("State " + str(state_number))
     state.print_map()
@@ -50,12 +49,11 @@ for state in states:
 
     print("Fitness: " + str(fitness) + "\n")
 
-    total += fitness
-
     state_number += 1
 
 
 # Selection
+total = sum(h_values)
 print("Total: " + str(total))
 print("Fitness values: " + str(h_values))
 
@@ -79,6 +77,7 @@ for h in h_normalize:
 print("H Ranges: " + str(h_ranges))
 
 # Randomly select 8 states
+print("\nSELECTION")
 selected_states = []
 for i in range(len(states)):
     r = round(random.random(), 2)
@@ -113,6 +112,7 @@ selection_strings = []
 for state in selected_states:
     selection_strings.append(encode_map(state.get_map()))
 
+print("CROSSOVER")
 crossover_strings = []
 # Create 4 pairs for 8 strings
 for string_one, string_two in zip(selection_strings[0::2], selection_strings[1::2]):
@@ -120,6 +120,9 @@ for string_one, string_two in zip(selection_strings[0::2], selection_strings[1::
 
     first_slice = (string_one[0:r], string_one[r:len(string_one)])
     second_slice = (string_two[0:r], string_two[r:len(string_two)])
+
+    print(first_slice[0] + " + " + second_slice[1] + " = " + first_slice[0] + second_slice[1])
+    print(second_slice[0] + " + " + first_slice[1] + " = " + second_slice[0] + first_slice[1])
 
     # Swap string halfs
     crossover_strings.append(first_slice[0] + second_slice[1])
@@ -132,24 +135,29 @@ print("Cross-over strings:")
 print(str(crossover_strings))
 
 # Mutation
+print("MUTATION")
 mutated_strings = []
 for cross_string in crossover_strings:
-    r = random.randint(1, 5)
+    rand_index = random.randint(0, 4)       # Generate index to change in string
+    new_queen = random.randint(1, 5)        # Generate new queen (1-5) to change at random index
+
     if r < 5:       # Mutate string if 0 <= r <= 4
         print("Cross string: " + cross_string)
-        print("Change queen " + str(r + 1))
-        print("Change " + cross_string[r] + " to " + str(r))
-        mut_string = cross_string[0:r] + str(r) + cross_string[r + 1:len(cross_string)]
+        print("Change queen " + str(rand_index + 1))
+        print("Change " + cross_string[rand_index] + " to " + str(new_queen))
+        mut_string = cross_string[0:rand_index] + str(new_queen) + cross_string[rand_index + 1:len(cross_string)]
         print(cross_string + " -> " + mut_string)
         mutated_strings.append(mut_string)
         print()
     else:
+        print("No mutation. Add " + str(cross_string))
         mutated_strings.append(cross_string)
+        print()
 
 print("Mutated strings:")
 print(str(mutated_strings))
 
-h_values.clear()
+h_values.clear()        # Clear 8 previous state fitnesses
 
 for state, mut_string in zip(states, mutated_strings):
     new_map = decode_map(mut_string)
