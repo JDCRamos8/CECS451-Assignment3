@@ -16,7 +16,7 @@ def encode_map(map):
 
 # Given a string, return a map of decoded queen's coordinates
 def decode_map(encoded):
-    map = [[0 for column in range(0, 5)] for queen in range(0, 5)]
+    map = [[0 for cell in range(0, 5)] for row in range(0, 5)]      # Create empty map
 
     column = 0
     for queen in encoded:
