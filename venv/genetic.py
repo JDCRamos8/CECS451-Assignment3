@@ -15,7 +15,7 @@ def encode_map(map):
 
 
 # Given a string, return a map of decoded queen's coordinates
-def decode_map(encoded): #12345
+def decode_map(encoded):
     map = [[0 for column in range(0, 5)] for queen in range(0, 5)]
 
     column = 0
@@ -37,11 +37,9 @@ def genetic_algorithm():
         states.append(Board(5))
 
 
-    # Print state, encode state, and calculate fitness(h)
-    state_number = 1
+    # Calculate fitness(h) for each state, 5C2 - Attacking Pairs
     for state in states:
         state.fitness()
-
         fitness = FIVE_CHOOSE_TWO - state.get_fit()
         h_values.append(fitness)
 
