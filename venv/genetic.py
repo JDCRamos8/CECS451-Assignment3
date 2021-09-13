@@ -13,6 +13,7 @@ def encode_map(map):
 
     return encoded_queens
 
+
 # Given a string, return a map of decoded queen's coordinates
 def decode_map(encoded): #12345
     map = [[0 for column in range(0, 5)] for queen in range(0, 5)]
@@ -35,6 +36,7 @@ def genetic_algorithm():
     for i in range(8):
         states.append(Board(5))
 
+
     # Print state, encode state, and calculate fitness(h)
     state_number = 1
     for state in states:
@@ -53,7 +55,7 @@ def genetic_algorithm():
         state_number += 1
 
 
-    while 10 not in h_values:
+    while 10 not in h_values:       # Restart until solution state is in fitness values
         # Selection
         total = sum(h_values)
         print("Total: " + str(total))
@@ -78,7 +80,7 @@ def genetic_algorithm():
 
         print("H Ranges: " + str(h_ranges))
 
-        # Randomly select 8 states
+        # Randomly select 8 states based on decimal value r (0, 1]
         print("\nSELECTION")
         selected_states = []
         for i in range(len(states)):
@@ -111,8 +113,9 @@ def genetic_algorithm():
                 print("Selected state 8")
 
         selection_strings = []
-        for state in selected_states:
+        for state in selected_states:       # Convert states into encoded strings
             selection_strings.append(encode_map(state.get_map()))
+
 
         print("CROSSOVER")
         crossover_strings = []
@@ -135,6 +138,7 @@ def genetic_algorithm():
 
         print("Cross-over strings:")
         print(str(crossover_strings))
+
 
         # Mutation
         print("MUTATION")
@@ -159,13 +163,16 @@ def genetic_algorithm():
         print("Mutated strings:")
         print(str(mutated_strings))
 
-        h_values.clear()        # Clear 8 previous state fitnesses
 
-        for state, mut_string in zip(states, mutated_strings):
+        h_values.clear()                                            # Clear 8 previous state fitnesses
+
+        for state, mut_string in zip(states, mutated_strings):      # Recalculate heuristic for new strings
             new_map = decode_map(mut_string)
             print("New Map: " + str(new_map))
+
             state.map = new_map;
             state.fitness()
+
             fitness = FIVE_CHOOSE_TWO - state.get_fit()
             h_values.append(fitness)
 
@@ -179,6 +186,7 @@ def genetic_algorithm():
     solution_state = states[solution_index]
 
     return (solution_state, restarts)
+
 
 def main():
     start_time = time.time() * 1000
