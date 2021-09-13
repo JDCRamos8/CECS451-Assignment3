@@ -47,7 +47,7 @@ def genetic_algorithm():
 
 
     while 10 not in h_values:       # Restart until solution state is in fitness values
-        # Selection
+        # SELECTION
         total = sum(h_values)
 
         h_normalize = []
@@ -95,6 +95,7 @@ def genetic_algorithm():
             selection_strings.append(encode_map(state.get_map()))
 
 
+        # CROSSOVER
         crossover_strings = []
         # Create 4 pairs for 8 strings
         for string_one, string_two in zip(selection_strings[0::2], selection_strings[1::2]):
@@ -108,7 +109,7 @@ def genetic_algorithm():
             crossover_strings.append(second_slice[0] + first_slice[1])
 
 
-        # Mutation
+        # MUTATION
         mutated_strings = []
         for cross_string in crossover_strings:
             rand_index = random.randint(0, 4)       # Generate index to change in string
