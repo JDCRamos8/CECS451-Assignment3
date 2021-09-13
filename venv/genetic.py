@@ -110,14 +110,14 @@ def genetic_algorithm():
         # MUTATION
         mutated_strings = []
         for cross_string in crossover_strings:
-            rand_index = random.randint(0, 4)       # Generate index to change in string
+            rand_index = random.randint(0, 5)       # Generate index to change in string
             new_queen = random.randint(1, 5)        # Generate new queen (1-5) to change at random index
 
-            if r < 5:       # Mutate string if 0 <= r <= 4
+            if rand_index < 5:       # Mutate string if 0 <= rand_index <= 4
                 mut_string = cross_string[0:rand_index] + str(new_queen) + cross_string[rand_index + 1:len(cross_string)]
                 mutated_strings.append(mut_string)
 
-            else:           # Keep crossover string
+            else:                   # Keep crossover string if rand_index = 5
                 mutated_strings.append(cross_string)
 
 
