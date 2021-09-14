@@ -23,12 +23,12 @@ def hill_climbing():
 
     heuristic_cost = curr_state.get_fit()
 
-    restart_condition = 0               # If result heuristic gets stuck 10 times, restart
+    restart_condition = 0               # If result heuristic gets stuck 2 times, restart
     restarts = 0
 
     while heuristic_cost != 0:           # Continue while heuristic cost is not 0
-        if restart_condition == 10:
-            curr_state = Board(5)       # Create new random 5x5 chess board
+        if restart_condition == 2:
+            curr_state = Board(5)        # Create new random 5x5 chess board
             curr_state.fitness()
 
             restarts += 1
